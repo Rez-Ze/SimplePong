@@ -45,7 +45,6 @@ int main()
     //Spielball
     sf::CircleShape ball(10.f);
     ball.setPosition(positionBall);              
-    ball.setFillColor(sf::Color::White);
 
     //Linker Spieler
     sf::RectangleShape leftPlayer;
@@ -66,8 +65,8 @@ int main()
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) window.close(); //Close with escape 
 
             //LeftPlayer Keys
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) leftPlayerY -= 1;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) leftPlayerY += 1;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) leftPlayerY = -1;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) leftPlayerY = 1;
         }
         
         //Methodenaufruf von Collision
