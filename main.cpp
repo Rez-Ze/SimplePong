@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <math.h>
 
-float velocityX = -1;
+float velocityX = -2;
 float velocityY;
 float maxSpeedBall = 5;
 float leftPlayerY;
@@ -45,8 +45,10 @@ void collisionBall() {
 
 //Checkt collision von beiden Spielern mit Rand
 void collisionPlayer() {
-    if (leftPlayerPos.y < 0 || leftPlayerPos.y > 520) leftPlayerY *= -1;
-    if (rightPlayerPos.y < 0 || rightPlayerPos.y > 520) rightPlayerY *= -1;
+    if (leftPlayerPos.y < 0) leftPlayerPos.y = 0;
+    if (leftPlayerPos.y > 520) leftPlayerPos.y = 520;
+    if (rightPlayerPos.y < 0) rightPlayerPos.y = 0;
+    if (rightPlayerPos.y > 520) rightPlayerPos.y = 520;
 }
 
 //wenn R gedrückt wird, wird Spiel resetet
@@ -54,7 +56,7 @@ void resetGame() {
     //Ball zurücksetzen
     positionBall = sf::Vector2f(300, 300);
     ball.setPosition(positionBall);
-    velocityX = -1;
+    velocityX = -2;
     velocityY = 0;
 
     //Spieler zurücksetzen
@@ -62,6 +64,10 @@ void resetGame() {
     rightPlayerPos = sf::Vector2f(590, 300);
     leftPlayer.setPosition(leftPlayerPos);
     rightPlayer.setPosition(rightPlayerPos);
+}
+
+void checkScore() {
+    if (positionBall.x < 0 || positionBall.x > 600) resetGame();
 }
 
 int main()
@@ -93,6 +99,8 @@ int main()
         //Methodenaufruf von Collision
         collisionBall();
         collisionPlayer();
+        //Check ob Ball außerhalb von Spielfeld;
+        checkScore();
 
         //Movement linker Spieler
         leftPlayer.setPosition(leftPlayerPos);
