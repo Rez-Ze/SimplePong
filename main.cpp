@@ -6,12 +6,13 @@ float velocityY;
 float maxSpeedBall = 5;
 float leftPlayerY;
 float rightPlayerY = 1;
+const float aiSpeed = 2.0f; // Maximale Geschwindigkeit der KI
 sf::CircleShape ball(10.f);
 sf::RectangleShape leftPlayer;
 sf::RectangleShape rightPlayer;
 sf::Vector2f positionBall(300 , 300);
-sf::Vector2f leftPlayerPos(0, 300);
-sf::Vector2f rightPlayerPos(590, 300);
+sf::Vector2f leftPlayerPos(0, 260);
+sf::Vector2f rightPlayerPos(590, 260);
 
 void handleInput() {
 //LeftPlayer Keys
@@ -51,7 +52,6 @@ void collisionPlayer() {
     if (rightPlayerPos.y > 520) rightPlayerPos.y = 520;
 }
 
-//wenn R gedrückt wird, wird Spiel resetet
 void resetGame() {
     //Ball zurücksetzen
     positionBall = sf::Vector2f(300, 300);
@@ -70,6 +70,18 @@ void checkScore() {
     if (positionBall.x < 0 || positionBall.x > 600) resetGame();
 }
 
+void updateAI() {
+    float ballCenter = positionBall.y + ball.getRadius();
+    float paddleCenter = rightPlayerPos.y + rightPlayer.getSize().y / 2;
+
+    // KI bewegt sich nur, wenn der Ball nicht schon auf gleicher Höhe ist
+    if (ballCenter < paddleCenter) {
+        rightPlayerPos.y -= aiSpeed; // Nach oben bewegen
+    }
+    if (ballCenter > paddleCenter) {
+        rightPlayerPos.y += aiSpeed; // Nach unten bewegen
+    }
+}
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({600, 600}), "Simple Pong"); // Window Initialisierung
@@ -101,12 +113,12 @@ int main()
         collisionPlayer();
         //Check ob Ball außerhalb von Spielfeld;
         checkScore();
+        
+        //AI des rechten Spielers
+        updateAI();
 
-        //Movement linker Spieler
+        //Positionen setzen
         leftPlayer.setPosition(leftPlayerPos);
-
-        //Movement rechter Spieler
-        rightPlayerPos.y = positionBall.y-40;
         rightPlayer.setPosition(rightPlayerPos);
 
         //Movment Ball
