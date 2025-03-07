@@ -67,8 +67,6 @@ void resetGame(bool rPressed) {
 
     if (rPressed == true) {
     //Spieler zurücksetzen
-    leftPlayerPos = sf::Vector2f(0, 300);
-    rightPlayerPos = sf::Vector2f(590, 300);
     leftPlayer.setPosition(leftPlayerPos);
     rightPlayer.setPosition(rightPlayerPos);
     textLeft.setString("0");
