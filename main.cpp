@@ -1,12 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <math.h>
-
+#include <string>
 float velocityX = -2;
 float velocityY;
 float maxSpeedBall = 5;
 float leftPlayerY;
 float rightPlayerY = 1;
+int scoreLeft = 0;
+int scoreRight = 0;
 const float aiSpeed = 2.0f; // Maximale Geschwindigkeit der KI
+sf::Font font("assets\\8bitOperatorPlus8-Regular.ttf");
+sf::Text textLeft(font);
+sf::Text textRight(font);
 sf::CircleShape ball(10.f);
 sf::RectangleShape leftPlayer;
 sf::RectangleShape rightPlayer;
@@ -52,22 +57,36 @@ void collisionPlayer() {
     if (rightPlayerPos.y > 520) rightPlayerPos.y = 520;
 }
 
-void resetGame() {
+void resetGame(bool rPressed) {
+
     //Ball zurücksetzen
     positionBall = sf::Vector2f(300, 300);
     ball.setPosition(positionBall);
     velocityX = -2;
     velocityY = 0;
 
+    if (rPressed == true) {
     //Spieler zurücksetzen
     leftPlayerPos = sf::Vector2f(0, 300);
     rightPlayerPos = sf::Vector2f(590, 300);
     leftPlayer.setPosition(leftPlayerPos);
     rightPlayer.setPosition(rightPlayerPos);
+    textLeft.setString("0");
+    textRight.setString("0");
+    }
 }
 
 void checkScore() {
-    if (positionBall.x < 0 || positionBall.x > 600) resetGame();
+    if (positionBall.x < 0) {
+        scoreRight += 1;
+        textRight.setString(std::to_string(scoreRight));
+        resetGame(false);
+    }
+    if (positionBall.x > 600) {
+        scoreLeft += 1;
+        textLeft.setString(std::to_string(scoreLeft));
+        resetGame(false);
+    }
 }
 
 void updateAI() {
@@ -96,7 +115,14 @@ int main()
     rightPlayer.setSize(sf::Vector2f(10, 80));
     rightPlayer.setPosition(rightPlayerPos);
 
-   
+    //Score Text links und rechts
+    textLeft.setString("0");
+    textLeft.setCharacterSize(50);
+    textLeft.setPosition(sf::Vector2f(100, 30));
+    textRight.setString("0");
+    textRight.setCharacterSize(50);
+    textRight.setPosition(sf::Vector2f(500, 30));
+
 
     while (window.isOpen()) //Event-Loop
     {
@@ -104,7 +130,7 @@ int main()
         {
             if (event->is<sf::Event::Closed>()) window.close(); //Close with X
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) window.close(); //Close with escape 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) resetGame();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) resetGame(true);
         }
         //Bewegung verarbeiten
         handleInput();
@@ -131,6 +157,8 @@ int main()
         window.draw(ball);
         window.draw(leftPlayer);
         window.draw(rightPlayer);
+        window.draw(textLeft);
+        window.draw(textRight);
         window.display();
     }
 
