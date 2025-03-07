@@ -25,15 +25,15 @@ void handleInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) leftPlayerPos.y += 5;
 }
 
-//Checkt collision vom Ball mit Spielern und Rand
+//Checkt Kollision vom Ball mit Spielern und Rand
 void collisionBall() {
 
     //Checkt Rand
     if (positionBall.y < 0 || positionBall.y > 580) velocityY *= -1;
     //Checkt linken Player
     if (positionBall.x < leftPlayerPos.x + 10 && positionBall.y > leftPlayerPos.y - 10 && positionBall.y < leftPlayerPos.y + 90) {
-        float intersectY = (ball.getPosition().y + ball.getRadius()) - (leftPlayer.getPosition().y + leftPlayer.getSize().y / 2);
-        float normalizedIntersectY = intersectY / (leftPlayer.getSize().y / 2);
+        float intersectY = (ball.getPosition().y + ball.getRadius()) - (leftPlayer.getPosition().y + leftPlayer.getSize().y / 2); //Berechnung des Aufschlagpunkt
+        float normalizedIntersectY = intersectY / (leftPlayer.getSize().y / 2); //Normalisierung
         velocityY = maxSpeedBall * normalizedIntersectY;
         velocityX = (velocityX < 0 ? -1 : 1) * std::sqrt(maxSpeedBall * maxSpeedBall - velocityY * velocityY); // Behalte konstante Geschwindigkeit
         velocityX *= -1;
@@ -49,7 +49,7 @@ void collisionBall() {
     }
 }
 
-//Checkt collision von beiden Spielern mit Rand
+//Checkt Kollision von beiden Spielern mit Rand
 void collisionPlayer() {
     if (leftPlayerPos.y < 0) leftPlayerPos.y = 0;
     if (leftPlayerPos.y > 520) leftPlayerPos.y = 520;
@@ -130,11 +130,11 @@ int main()
         {
             if (event->is<sf::Event::Closed>()) window.close(); //Close with X
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) window.close(); //Close with escape 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) resetGame(true);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) resetGame(true); //Restard with R
         }
         //Bewegung verarbeiten
         handleInput();
-        //Methodenaufruf von Collision
+        //Kollisionschecks
         collisionBall();
         collisionPlayer();
         //Check ob Ball außerhalb von Spielfeld;
@@ -147,7 +147,7 @@ int main()
         leftPlayer.setPosition(leftPlayerPos);
         rightPlayer.setPosition(rightPlayerPos);
 
-        //Movment Ball
+        //Movement Ball
         positionBall.x += velocityX;
         positionBall.y += velocityY;
         ball.setPosition(positionBall);
